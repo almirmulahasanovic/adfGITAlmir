@@ -19,10 +19,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation",
-				"relativeUrl": {
-					"value": "@concat(dataset().FileName,'.csv','.gz')",
-					"type": "Expression"
-				}
+				"relativeUrl": "themes.csv.gz"
 			},
 			"columnDelimiter": ",",
 			"rowDelimiter": "\n",

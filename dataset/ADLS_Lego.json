@@ -19,10 +19,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@{dataset().FileName}.csv",
-					"type": "Expression"
-				},
+				"fileName": "themes.csv",
 				"fileSystem": "lego"
 			},
 			"columnDelimiter": ",",
