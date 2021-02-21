@@ -188,7 +188,9 @@
 							{
 								"referenceName": "HTTP_Lego",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": "FileName"
+								}
 							}
 						],
 						"outputs": [
@@ -233,7 +235,7 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "@{pipeline().parameters.FileName}"
+								"value": "@{pipeline().parameters.FileName}.csv"
 							},
 							{
 								"name": "Destination",
@@ -824,7 +826,7 @@
 					"columnDelimiter": ",",
 					"rowDelimiter": "\n",
 					"compressionCodec": "gzip",
-					"compressionLevel": "Optimal",
+					"compressionLevel": "Fastest",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
