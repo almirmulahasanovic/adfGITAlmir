@@ -17,7 +17,7 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "@{pipeline().parameters.FileName}"
+						"value": "@{pipeline().parameters.FileName}.csv"
 					},
 					{
 						"name": "Destination",
