@@ -1,9 +1,15 @@
 {
-	"name": "HTTP_Lego_Sets",
+	"name": "HTTP_Lego_Generic",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "HTTP_Lego",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FileName": {
+				"type": "string",
+				"defaultValue": "FileName"
+			}
 		},
 		"folder": {
 			"name": "Lego"
@@ -13,7 +19,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation",
-				"relativeUrl": "sets.csv.gz"
+				"relativeUrl": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"rowDelimiter": "\n",
@@ -23,20 +32,7 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": [
-			{
-				"name": "id",
-				"type": "String"
-			},
-			{
-				"name": "name",
-				"type": "String"
-			},
-			{
-				"name": "parent_id",
-				"type": "String"
-			}
-		]
+		"schema": []
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
