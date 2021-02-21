@@ -20,7 +20,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "@{dataset().FileName}.csv.gz",
+					"value": "@concat(dataset().FileName,'.csv','.gz')",
 					"type": "Expression"
 				}
 			},

@@ -73,7 +73,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FileName": {
-								"value": "@{pipeline().parameters.FileName}.csv.gz",
+								"value": "@{pipeline().parameters.FileName}.csv",
 								"type": "Expression"
 							}
 						}
