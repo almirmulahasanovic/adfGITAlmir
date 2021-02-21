@@ -213,7 +213,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Lego_HTTP_To_ADLS_Themes')]",
+			"name": "[concat(parameters('factoryName'), '/Lego_HTTP_To_ADLS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -233,11 +233,11 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "themes.csv.gz"
+								"value": "@{pipeline().parameters.FileName}"
 							},
 							{
 								"name": "Destination",
-								"value": "lego//themes.csv"
+								"value": "lego//@{pipeline().parameters.FileName}.csv"
 							}
 						],
 						"typeProperties": {
@@ -276,7 +276,10 @@
 										"referenceName": "ABLB_Lego",
 										"type": "LinkedServiceReference"
 									},
-									"path": "lego/errors/themes"
+									"path": {
+										"value": "lego/errors/lego//@{pipeline().parameters.FileName}.csv",
+										"type": "Expression"
+									}
 								}
 							}
 						},
@@ -297,7 +300,10 @@
 								"referenceName": "ADLS_Lego",
 								"type": "DatasetReference",
 								"parameters": {
-									"FileName": "FileName"
+									"FileName": {
+										"value": "@pipeline().parameters.FileName",
+										"type": "Expression"
+									}
 								}
 							}
 						]
@@ -470,7 +476,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "Lego_HTTP_To_ADLS_Themes",
+								"referenceName": "Lego_HTTP_To_ADLS",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": false,
@@ -506,7 +512,7 @@
 				"lastPublishTime": "2021-02-19T22:46:43Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Lego_HTTP_To_ADLS_Themes')]",
+				"[concat(variables('factoryId'), '/pipelines/Lego_HTTP_To_ADLS')]",
 				"[concat(variables('factoryId'), '/pipelines/Lego_ADLS_To_ASQL_Themes')]"
 			]
 		},
@@ -574,7 +580,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "@dataset().FileName",
+							"value": "@{dataset().FileName}.csv",
 							"type": "Expression"
 						},
 						"fileSystem": "lego"
@@ -811,7 +817,7 @@
 					"location": {
 						"type": "HttpServerLocation",
 						"relativeUrl": {
-							"value": "@dataset().FileName",
+							"value": "@{dataset().FileName}.csv",
 							"type": "Expression"
 						}
 					},
