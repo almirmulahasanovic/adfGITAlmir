@@ -66,18 +66,33 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "HTTP_Lego_Themes",
-						"type": "DatasetReference"
+						"referenceName": "HTTP_Lego",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": {
+								"value": "@pipeline().parameters.FileName",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ADLS_Lego_Themes",
-						"type": "DatasetReference"
+						"referenceName": "ADLS_Lego",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "FileName"
+						}
 					}
 				]
 			}
 		],
+		"parameters": {
+			"FileName": {
+				"type": "String",
+				"defaultValue": "FileName"
+			}
+		},
 		"folder": {
 			"name": "Lego"
 		},

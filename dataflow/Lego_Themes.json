@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ADLS_Lego_Themes",
+						"referenceName": "ADLS_Lego",
 						"type": "DatasetReference"
 					},
 					"name": "ADLSLegoThemes"

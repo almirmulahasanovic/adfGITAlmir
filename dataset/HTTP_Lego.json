@@ -1,5 +1,5 @@
 {
-	"name": "HTTP_Lego_Generic",
+	"name": "HTTP_Lego",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "HTTP_Lego",
