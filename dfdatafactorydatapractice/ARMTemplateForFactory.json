@@ -186,7 +186,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "HTTP_Lego_Generic",
+								"referenceName": "HTTP_Lego",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -207,7 +207,7 @@
 				"lastPublishTime": "2021-02-21T18:39:55Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/HTTP_Lego_Generic')]",
+				"[concat(variables('factoryId'), '/datasets/HTTP_Lego')]",
 				"[concat(variables('factoryId'), '/datasets/ADLS_Lego_Sets')]",
 				"[concat(variables('factoryId'), '/linkedServices/ABLB_Lego')]"
 			]
@@ -282,20 +282,33 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "HTTP_Lego_Themes",
+								"referenceName": "HTTP_Lego",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": {
+										"value": "@pipeline().parameters.FileName",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "ADLS_Lego_Themes",
+								"referenceName": "ADLS_Lego",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": "FileName"
+								}
 							}
 						]
 					}
 				],
+				"parameters": {
+					"FileName": {
+						"type": "String",
+						"defaultValue": "FileName"
+					}
+				},
 				"folder": {
 					"name": "Lego"
 				},
@@ -303,8 +316,8 @@
 				"lastPublishTime": "2021-02-21T18:39:55Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/HTTP_Lego_Themes')]",
-				"[concat(variables('factoryId'), '/datasets/ADLS_Lego_Themes')]",
+				"[concat(variables('factoryId'), '/datasets/HTTP_Lego')]",
+				"[concat(variables('factoryId'), '/datasets/ADLS_Lego')]",
 				"[concat(variables('factoryId'), '/linkedServices/ABLB_Lego')]"
 			]
 		},
@@ -538,13 +551,19 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ADLS_Lego_Themes')]",
+			"name": "[concat(parameters('factoryName'), '/ADLS_Lego')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "ADLS_Lego",
 					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "String",
+						"defaultValue": "FileName"
+					}
 				},
 				"folder": {
 					"name": "Lego"
@@ -554,7 +573,10 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "themes.csv",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
 						"fileSystem": "lego"
 					},
 					"columnDelimiter": ",",
@@ -766,7 +788,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/HTTP_Lego_Generic')]",
+			"name": "[concat(parameters('factoryName'), '/HTTP_Lego')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1143,7 +1165,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "ADLS_Lego_Themes",
+								"referenceName": "ADLS_Lego",
 								"type": "DatasetReference"
 							},
 							"name": "ADLSLegoThemes"
@@ -1167,7 +1189,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ADLS_Lego_Themes')]",
+				"[concat(variables('factoryId'), '/datasets/ADLS_Lego')]",
 				"[concat(variables('factoryId'), '/datasets/ASQL_Lego_Themes')]"
 			]
 		}
