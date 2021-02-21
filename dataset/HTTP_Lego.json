@@ -20,7 +20,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "@dataset().FileName",
+					"value": "@{dataset().FileName}.csv",
 					"type": "Expression"
 				}
 			},

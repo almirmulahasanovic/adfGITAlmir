@@ -1,5 +1,5 @@
 {
-	"name": "Lego_HTTP_To_ADLS_Themes",
+	"name": "Lego_HTTP_To_ADLS",
 	"properties": {
 		"description": "Copy Themes.csv file from Lego dataset into ADSL container named Lego",
 		"activities": [
@@ -17,11 +17,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "themes.csv.gz"
+						"value": "@{pipeline().parameters.FileName}"
 					},
 					{
 						"name": "Destination",
-						"value": "lego//themes.csv"
+						"value": "lego//@{pipeline().parameters.FileName}.csv"
 					}
 				],
 				"typeProperties": {
@@ -60,7 +60,10 @@
 								"referenceName": "ABLB_Lego",
 								"type": "LinkedServiceReference"
 							},
-							"path": "lego/errors/themes"
+							"path": {
+								"value": "lego/errors/lego//@{pipeline().parameters.FileName}.csv",
+								"type": "Expression"
+							}
 						}
 					}
 				},
@@ -81,7 +84,10 @@
 						"referenceName": "ADLS_Lego",
 						"type": "DatasetReference",
 						"parameters": {
-							"FileName": "FileName"
+							"FileName": {
+								"value": "@pipeline().parameters.FileName",
+								"type": "Expression"
+							}
 						}
 					}
 				]
