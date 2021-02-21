@@ -1,0 +1,46 @@
+{
+	"name": "Orchetration_Lego",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute HTTP to ADLS",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Lego_HTTP_To_ADLS_Themes",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false
+				}
+			},
+			{
+				"name": "Execute ADLS to ASQL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute HTTP to ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Lego_ADLS_To_ASQL_Themes",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Lego"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-02-19T22:46:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

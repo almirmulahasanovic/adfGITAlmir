@@ -1,0 +1,7 @@
+{
+	"name": "AlmirLaptopIntegrationRuntime",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "Self Hosted Integration Runtime running on Almirs Laptop"
+	}
+}

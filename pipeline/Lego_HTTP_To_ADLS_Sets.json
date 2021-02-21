@@ -1,0 +1,88 @@
+{
+	"name": "Lego_HTTP_To_ADLS_Sets",
+	"properties": {
+		"description": "Copy Themes.csv file from Lego dataset into ADSL container named Lego",
+		"activities": [
+			{
+				"name": "Copy Sets From HTTP to ADLS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "sets.csv.gz"
+					},
+					{
+						"name": "Destination",
+						"value": "lego//sets.csv"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings",
+							"skipLineCount": 0
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": true,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "ABLB_Lego",
+								"type": "LinkedServiceReference"
+							},
+							"path": "lego/errors/sets"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "HTTP_Lego_Sets",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ADLS_Lego_Sets",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Lego"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-02-21T18:39:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

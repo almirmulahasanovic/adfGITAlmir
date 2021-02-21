@@ -1,0 +1,20 @@
+{
+	"name": "ASQL_Lego_Themes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ASQL_Lego_Entertainment",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Lego"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "lego",
+			"table": "themes"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

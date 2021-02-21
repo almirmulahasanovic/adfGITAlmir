@@ -1,0 +1,26 @@
+{
+	"name": "DestintionforADLSFinal",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLakeSinkLS",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "IMDb"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "imdbdatacollection"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
