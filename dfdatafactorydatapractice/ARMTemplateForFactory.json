@@ -277,7 +277,7 @@
 										"type": "LinkedServiceReference"
 									},
 									"path": {
-										"value": "lego/errors/lego//@{pipeline().parameters.FileName}.csv",
+										"value": "lego/errors/@{pipeline().parameters.FileName}.csv",
 										"type": "Expression"
 									}
 								}
@@ -301,7 +301,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"FileName": {
-										"value": "@pipeline().parameters.FileName",
+										"value": "@{pipeline().parameters.FileName}.csv",
 										"type": "Expression"
 									}
 								}
