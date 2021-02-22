@@ -1,0 +1,30 @@
+{
+	"name": "IMdb_Files_MappingConfiguration",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IMdbMappingConfigLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "IMdb DataSets"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Mappings.txt",
+				"container": "mappings"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			}
+		]
+	}
+}
