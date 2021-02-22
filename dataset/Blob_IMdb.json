@@ -1,0 +1,37 @@
+{
+	"name": "Blob_IMdb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobIMdbLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FileName": {
+				"type": "string",
+				"defaultValue": "FileName"
+			}
+		},
+		"folder": {
+			"name": "IMdb DataSets"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
+				"folderPath": "IMDb All",
+				"container": "imdbsourcedata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

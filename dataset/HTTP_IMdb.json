@@ -1,0 +1,37 @@
+{
+	"name": "HTTP_IMdb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IMdbHTTPLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FileName": {
+				"type": "string",
+				"defaultValue": "FileName"
+			}
+		},
+		"folder": {
+			"name": "IMdb DataSets"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"compressionCodec": "gzip",
+			"compressionLevel": "Optimal",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

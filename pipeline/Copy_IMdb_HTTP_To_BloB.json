@@ -1,0 +1,115 @@
+{
+	"name": "Copy_IMdb_HTTP_To_BloB",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy IMdb from HTTP to Blob",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "@{concat(pipeline().parameters.FileName, '.tsv.gz')}"
+					},
+					{
+						"name": "Destination",
+						"value": "imdbsourcedata/IMDb All/@{concat(pipeline().parameters.FileName, '.tsv')}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": true,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "BlobIMdbLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"path": {
+								"value": "imdbsourcedata/IMDb All/@{concat(pipeline().parameters.FileName, '.tsv')}",
+								"type": "Expression"
+							}
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "HTTP_IMdb",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": {
+								"value": "@{pipeline().parameters.FileName}.tsv.gz",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Blob_IMdb",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": {
+								"value": "@{pipeline().parameters.FileName}.tsv",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"FileName": {
+				"type": "String",
+				"defaultValue": "FileName"
+			}
+		},
+		"folder": {
+			"name": "IMdb PipeLines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-02-22T14:42:44Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
