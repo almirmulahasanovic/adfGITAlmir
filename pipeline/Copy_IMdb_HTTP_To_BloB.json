@@ -91,7 +91,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FileName": {
-								"value": "@{pipeline().parameters.DestinationTableName}.csv",
+								"value": "@{pipeline().parameters.FileName}.csv",
 								"type": "Expression"
 							}
 						}
