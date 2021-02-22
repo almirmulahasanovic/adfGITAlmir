@@ -3,55 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Set Files",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Lookup Load Configuration Parameters",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "Files",
-					"value": [
-						"name.basics",
-						"title.akas",
-						"title.crew",
-						"title.basics",
-						"title.episode",
-						"title.principals",
-						"title.ratings"
-					]
-				}
-			},
-			{
-				"name": "If Load All Files Check",
-				"type": "IfCondition",
-				"dependsOn": [
-					{
-						"activity": "Set Files",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"expression": {
-						"value": "@pipeline().parameters.LoadAllFiles",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "ForEach File",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "If Load All Files Check",
+						"activity": "Filter Active Loads",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -60,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@variables('Files')",
+						"value": "@activity('Filter Active Loads').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -78,7 +34,11 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"FileName": {
-										"value": "@item()",
+										"value": "@item().SourceFileName",
+										"type": "Expression"
+									},
+									"DestinationTableName": {
+										"value": "@item().DestinationFileName",
 										"type": "Expression"
 									}
 								}
@@ -116,6 +76,29 @@
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Filter Active Loads",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Lookup Load Configuration Parameters",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Load Configuration Parameters').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().IsActive,'1')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
