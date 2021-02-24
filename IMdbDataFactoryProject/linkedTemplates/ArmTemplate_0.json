@@ -11,19 +11,80 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'BlobIMdbLinkedService'"
 		},
-		"IMdbMappingConfigLinkedService_connectionString": {
+		"MappingConfigurationFilesLS_accountKey": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IMdbMappingConfigLinkedService'"
+			"metadata": "Secure string for 'accountKey' of 'MappingConfigurationFilesLS'"
+		},
+		"Adls__Sink_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Adls__Sink'"
+		},
+		"Adls_Sink_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Adls_Sink'"
+		},
+		"AzureKeyVaultConnection_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kv-datapractice.vault.azure.net/"
 		},
 		"IMdbHTTPLinkedService_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://datasets.imdbws.com/"
+		},
+		"KeyVaultConnection_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kv-datapractice.vault.azure.net/"
+		},
+		"MappingConfigurationFilesLS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
+		},
+		"Adls__Sink_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
+		},
+		"Adls_Sink_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
+		},
+		"ASQLConnection_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "IMdbSql"
+		},
+		"AzureSqlDatabaseLinkedService_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "sqldatabase"
+		},
+		"IMdbMappingConfigLinkedService_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "adls"
+		},
+		"bloblinkedservice_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobstorage"
+		},
+		"IMdb_BloB_Files_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobstorage"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVaultConnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVaultConnection_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/BlobIMdbLinkedService')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -53,14 +114,65 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/IMdbMappingConfigLinkedService')]",
+			"name": "[concat(parameters('factoryName'), '/KeyVaultConnection')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureBlobStorage",
+				"type": "AzureKeyVault",
 				"typeProperties": {
-					"connectionString": "[parameters('IMdbMappingConfigLinkedService_connectionString')]"
+					"baseUrl": "[parameters('KeyVaultConnection_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MappingConfigurationFilesLS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('MappingConfigurationFilesLS_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('MappingConfigurationFilesLS_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Adls__Sink')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('Adls__Sink_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('Adls__Sink_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Adls_Sink')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('Adls_Sink_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('Adls_Sink_accountKey')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -153,7 +265,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "IMdbMappingConfigLinkedService",
+					"referenceName": "MappingConfigurationFilesLS",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -163,23 +275,286 @@
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Mappings.txt",
-						"container": "mappings"
+						"type": "AzureBlobFSLocation",
+						"fileName": "Mappings.csv",
+						"folderPath": "ConfigurationFiles",
+						"fileSystem": "imdbdatacollection"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": [
-					{
-						"type": "String"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IMdbMappingConfigLinkedService')]"
+				"[concat(variables('factoryId'), '/linkedServices/MappingConfigurationFilesLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MappingConfigurationFile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MappingConfigurationFilesLS",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IMdb DataSets"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Mappings.csv",
+						"folderPath": "ConfigurationFiles",
+						"fileSystem": "imdbdatacollection"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MappingConfigurationFilesLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ASQLConnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KeyVaultConnection",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('ASQLConnection_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KeyVaultConnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabaseLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KeyVaultConnection",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureSqlDatabaseLinkedService_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KeyVaultConnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IMdbMappingConfigLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KeyVaultConnection",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('IMdbMappingConfigLinkedService_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KeyVaultConnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/bloblinkedservice')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KeyVaultConnection",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('bloblinkedservice_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KeyVaultConnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IMdb_BloB_Files')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KeyVaultConnection",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('IMdb_BloB_Files_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KeyVaultConnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BinarySinkFileStore')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Connection to your destination data store.",
+				"linkedServiceName": {
+					"referenceName": "Adls__Sink",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Adls__Sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BinaryDataDestination')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "It describes the destination store.",
+				"linkedServiceName": {
+					"referenceName": "Adls_Sink",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"DestinationContainer": {
+						"type": "string",
+						"defaultValue": "DestinationContainer"
+					},
+					"DestinationFolder": {
+						"type": "string",
+						"defaultValue": "DestinationFolder"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().DestinationFolder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().DestinationContainer",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Adls_Sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_Destination')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Adls__Sink",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"DestinationContainer": {
+						"type": "string",
+						"defaultValue": "DestinationContainer"
+					},
+					"DestinationFolder": {
+						"type": "string",
+						"defaultValue": "DestinationFolder"
+					}
+				},
+				"folder": {
+					"name": "IMdb DataSets"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().DestinationFolder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().DestinationContainer",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Adls__Sink')]"
 			]
 		},
 		{
@@ -305,136 +680,6 @@
 				"[concat(variables('factoryId'), '/datasets/HTTP_IMdb')]",
 				"[concat(variables('factoryId'), '/datasets/Blob_IMdb')]",
 				"[concat(variables('factoryId'), '/linkedServices/BlobIMdbLinkedService')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LoadMainorAllFiles')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach File",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Filter Active Loads",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter Active Loads').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Exec Copy IMdb files From HTTP to Blob",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Copy_IMdb_HTTP_To_BloB",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"FileName": {
-												"value": "@item().SourceFileName",
-												"type": "Expression"
-											},
-											"DestinationTableName": {
-												"value": "@item().DestinationFileName",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Lookup Load Configuration Parameters",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"dataset": {
-								"referenceName": "IMdb_Files_MappingConfiguration",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Filter Active Loads",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Lookup Load Configuration Parameters",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup Load Configuration Parameters').output.value",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(item().IsActive,'1')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"LoadAllFiles": {
-						"type": "bool"
-					}
-				},
-				"variables": {
-					"Files": {
-						"type": "Array"
-					},
-					"ListOfFiles": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "IMdb PipeLines"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/IMdb_Files_MappingConfiguration')]",
-				"[concat(variables('factoryId'), '/pipelines/Copy_IMdb_HTTP_To_BloB')]"
 			]
 		}
 	]
