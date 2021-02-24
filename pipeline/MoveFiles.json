@@ -127,7 +127,17 @@
 							"outputs": [
 								{
 									"referenceName": "BinaryDataDestination",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"DestinationContainer": {
+											"value": "@activity('Lookup Source and Destination paths').output.firstRow.DestinationContainer",
+											"type": "Expression"
+										},
+										"DestinationFolder": {
+											"value": "@activity('Lookup Source and Destination paths').output.firstRow.DestinationFolder",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						},
