@@ -1,0 +1,199 @@
+{
+	"name": "MoveFromBlobToADLS",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup for Source and Dest ContainersFolder",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT distinct SourceContainer, SourceFolder, DestinationContainer, DestinationFolder\n  FROM [Mappings].[LoadFilesMappings] where isActive = 1",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_IMdb",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "Get Metadata",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "Lookup for Source and Dest ContainersFolder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "BlobBinaryMetadataFileSource",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceContainer",
+								"type": "Expression"
+							},
+							"Folder": {
+								"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceFolder",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Filter Files Only",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@endswith(item().name,'csv')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach Filtered File",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter Files Only",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter Files Only').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy datafrom BloB into ADLS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "BlobBinaryFileSource",
+									"type": "DatasetReference",
+									"parameters": {
+										"Container": {
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceContainer",
+											"type": "Expression"
+										},
+										"Folder": {
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceFolder",
+											"type": "Expression"
+										},
+										"File": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ADLSBinaryFileDestination",
+									"type": "DatasetReference",
+									"parameters": {
+										"Container": {
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationContainer",
+											"type": "Expression"
+										},
+										"Folder": {
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationFolder",
+											"type": "Expression"
+										},
+										"File": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "IMdb PipeLines"
+		},
+		"annotations": []
+	}
+}

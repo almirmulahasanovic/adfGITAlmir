@@ -1,0 +1,30 @@
+{
+	"name": "ADLSBinaryFileDestination",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLSBinaryFileDestinationLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Container": {
+				"type": "string"
+			},
+			"Folder": {
+				"type": "string"
+			},
+			"File": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "IMdb DataSets"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation"
+			}
+		}
+	}
+}

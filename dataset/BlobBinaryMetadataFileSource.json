@@ -1,0 +1,35 @@
+{
+	"name": "BlobBinaryMetadataFileSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobBinaryFileSourceLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Container": {
+				"type": "string"
+			},
+			"Folder": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "IMdb DataSets"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().Folder",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().Container",
+					"type": "Expression"
+				}
+			}
+		}
+	}
+}
