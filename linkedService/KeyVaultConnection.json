@@ -1,0 +1,10 @@
+{
+	"name": "KeyVaultConnection",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://kv-datapractice.vault.azure.net/"
+		}
+	}
+}
