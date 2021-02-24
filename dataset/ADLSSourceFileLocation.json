@@ -5,6 +5,17 @@
 			"referenceName": "Adls__Sink",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"SourceContainer": {
+				"type": "string"
+			},
+			"SourceFolder": {
+				"type": "string"
+			},
+			"SourceFile": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "IMdb DataSets/AdlsToSQL"
 		},
@@ -13,9 +24,18 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "Ratings.csv",
-				"folderPath": "OriginalFiles",
-				"fileSystem": "imdbdatacollection"
+				"fileName": {
+					"value": "@dataset().SourceFile",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().SourceFolder",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().SourceContainer",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": "\t",
 			"escapeChar": "\\",
