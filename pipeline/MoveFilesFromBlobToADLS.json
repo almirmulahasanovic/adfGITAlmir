@@ -96,14 +96,9 @@
 									"recursive": false
 								},
 								"sink": {
-									"type": "DelimitedTextSink",
+									"type": "BinarySink",
 									"storeSettings": {
 										"type": "AzureBlobFSWriteSettings"
-									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
 									}
 								},
 								"enableStaging": false,
@@ -131,7 +126,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ADLS_Destination",
+									"referenceName": "Adls_Binary_Destination",
 									"type": "DatasetReference",
 									"parameters": {
 										"DestinationContainer": {
