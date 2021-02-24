@@ -12,7 +12,7 @@
 			}
 		},
 		"folder": {
-			"name": "IMdb DataSets"
+			"name": "IMdb DataSets/Initial Extraction and store from HTTP"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
