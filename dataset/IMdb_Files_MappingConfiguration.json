@@ -2,7 +2,7 @@
 	"name": "IMdb_Files_MappingConfiguration",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "IMdbMappingConfigLinkedService",
+			"referenceName": "MappingConfigurationFilesLS",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -12,8 +12,10 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
-				"container": "mappings"
+				"type": "AzureBlobFSLocation",
+				"fileName": "Mappings.csv",
+				"folderPath": "ConfigurationFiles",
+				"fileSystem": "imdbdatacollection"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
