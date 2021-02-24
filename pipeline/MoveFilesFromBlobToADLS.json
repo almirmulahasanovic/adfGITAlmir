@@ -96,9 +96,14 @@
 									"recursive": false
 								},
 								"sink": {
-									"type": "BinarySink",
+									"type": "DelimitedTextSink",
 									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
 									}
 								},
 								"enableStaging": false,
@@ -126,14 +131,14 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "BinaryDataSource_Folder",
+									"referenceName": "ADLS_Destination",
 									"type": "DatasetReference",
 									"parameters": {
-										"Container": {
+										"DestinationContainer": {
 											"value": "@activity('Lookup Source and Destination paths').output.firstRow.DestinationContainer",
 											"type": "Expression"
 										},
-										"Directory": {
+										"DestinationFolder": {
 											"value": "@activity('Lookup Source and Destination paths').output.firstRow.DestinationFolder",
 											"type": "Expression"
 										}
