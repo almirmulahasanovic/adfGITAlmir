@@ -116,17 +116,72 @@
 					},
 					"activities": [
 						{
-							"name": "Move From Blob to ADLS",
-							"type": "ExecutePipeline",
+							"name": "Copy data from Blob into ADLS",
+							"type": "Copy",
 							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
-								"pipeline": {
-									"referenceName": "Move From Blob to ADLS",
-									"type": "PipelineReference"
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
 								},
-								"waitOnCompletion": true
-							}
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "BlobBinaryFileSource",
+									"type": "DatasetReference",
+									"parameters": {
+										"Container": {
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceContainer",
+											"type": "Expression"
+										},
+										"Folder": {
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceFolder",
+											"type": "Expression"
+										},
+										"File": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ADLSBinaryFileDestination",
+									"type": "DatasetReference",
+									"parameters": {
+										"DestinationContainer": {
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationContainer",
+											"type": "Expression"
+										},
+										"DestinationFolder": {
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationFolder",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
