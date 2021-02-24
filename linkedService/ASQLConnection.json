@@ -1,0 +1,17 @@
+{
+	"name": "ASQLConnection",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "KeyVaultConnection",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sqlsrv-keyvault-secret-access-key"
+			}
+		}
+	}
+}
