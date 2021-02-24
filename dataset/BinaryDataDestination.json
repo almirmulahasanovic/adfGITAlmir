@@ -6,6 +6,16 @@
 			"referenceName": "Adls_Sink",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"DestinationContainer": {
+				"type": "string",
+				"defaultValue": "DestinationContainer"
+			},
+			"DestinationFolder": {
+				"type": "string",
+				"defaultValue": "DestinationFolder"
+			}
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
