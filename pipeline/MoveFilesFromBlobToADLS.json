@@ -1,5 +1,5 @@
 {
-	"name": "MoveFiles",
+	"name": "MoveFilesFromBlobToADLS",
 	"properties": {
 		"description": "Move files from one folder to another folder",
 		"activities": [
@@ -253,6 +253,9 @@
 			"DestinationStore_Directory": {
 				"type": "String"
 			}
+		},
+		"folder": {
+			"name": "IMdb PipeLines"
 		},
 		"annotations": []
 	}
