@@ -167,11 +167,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Container": {
-											"value": "@pipeline().parameters.SourceStore_Location",
+											"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceContainer",
 											"type": "Expression"
 										},
 										"Directory": {
-											"value": "@pipeline().parameters.SourceStore_Directory",
+											"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceDirectory",
 											"type": "Expression"
 										},
 										"filename": {
