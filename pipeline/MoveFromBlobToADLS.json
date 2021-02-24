@@ -116,7 +116,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy datafrom BloB into ADLS",
+							"name": "Copy data from Blob into ADLS",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
