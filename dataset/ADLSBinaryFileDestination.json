@@ -6,10 +6,10 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"Container": {
+			"DestinationContainer": {
 				"type": "string"
 			},
-			"Folder": {
+			"DestinationFolder": {
 				"type": "string"
 			}
 		},
@@ -21,8 +21,14 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "OriginalFiles",
-				"fileSystem": "imdbdatacollection"
+				"folderPath": {
+					"value": "@dataset().DestinationFolder",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().DestinationContainer",
+					"type": "Expression"
+				}
 			}
 		}
 	}
