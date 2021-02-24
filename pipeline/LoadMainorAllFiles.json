@@ -63,7 +63,7 @@
 					"source": {
 						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
+							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
@@ -72,7 +72,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "IMdb_Files_MappingConfiguration",
+						"referenceName": "MappingConfigurationFile",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
