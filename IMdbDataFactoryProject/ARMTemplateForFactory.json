@@ -693,13 +693,17 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/BloBToADLS"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().File",
+							"type": "Expression"
+						},
 						"folderPath": {
 							"value": "@dataset().Folder",
 							"type": "Expression"
@@ -747,19 +751,18 @@
 					},
 					"Folder": {
 						"type": "string"
-					},
-					"File": {
-						"type": "string"
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/BloBToADLS"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation"
+						"type": "AzureBlobFSLocation",
+						"folderPath": "OriginalFiles",
+						"fileSystem": "imdbdatacollection"
 					}
 				}
 			},
@@ -950,10 +953,6 @@
 												"Folder": {
 													"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationFolder",
 													"type": "Expression"
-												},
-												"File": {
-													"value": "@item().name",
-													"type": "Expression"
 												}
 											}
 										}
@@ -993,7 +992,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/BloBToADLS"
 				},
 				"annotations": [],
 				"type": "Binary",

@@ -435,19 +435,18 @@
 					},
 					"Folder": {
 						"type": "string"
-					},
-					"File": {
-						"type": "string"
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/BloBToADLS"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation"
+						"type": "AzureBlobFSLocation",
+						"folderPath": "OriginalFiles",
+						"fileSystem": "imdbdatacollection"
 					}
 				}
 			},
@@ -625,13 +624,17 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/BloBToADLS"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().File",
+							"type": "Expression"
+						},
 						"folderPath": {
 							"value": "@dataset().Folder",
 							"type": "Expression"
