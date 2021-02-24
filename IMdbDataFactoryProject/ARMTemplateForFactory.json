@@ -345,7 +345,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/Initial Extraction and store from HTTP"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -386,7 +386,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/Initial Extraction and store from HTTP"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -421,7 +421,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/SQL Dataset"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -746,10 +746,10 @@
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"Container": {
+					"DestinationContainer": {
 						"type": "string"
 					},
-					"Folder": {
+					"DestinationFolder": {
 						"type": "string"
 					}
 				},
@@ -761,8 +761,14 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "OriginalFiles",
-						"fileSystem": "imdbdatacollection"
+						"folderPath": {
+							"value": "@dataset().DestinationFolder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().DestinationContainer",
+							"type": "Expression"
+						}
 					}
 				}
 			},
@@ -891,7 +897,7 @@
 							},
 							"activities": [
 								{
-									"name": "Copy datafrom BloB into ADLS",
+									"name": "Copy data from Blob into ADLS",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -946,11 +952,11 @@
 											"referenceName": "ADLSBinaryFileDestination",
 											"type": "DatasetReference",
 											"parameters": {
-												"Container": {
+												"DestinationContainer": {
 													"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationContainer",
 													"type": "Expression"
 												},
-												"Folder": {
+												"DestinationFolder": {
 													"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationFolder",
 													"type": "Expression"
 												}

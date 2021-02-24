@@ -222,7 +222,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/Initial Extraction and store from HTTP"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -263,7 +263,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/Initial Extraction and store from HTTP"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -430,10 +430,10 @@
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"Container": {
+					"DestinationContainer": {
 						"type": "string"
 					},
-					"Folder": {
+					"DestinationFolder": {
 						"type": "string"
 					}
 				},
@@ -445,8 +445,14 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "OriginalFiles",
-						"fileSystem": "imdbdatacollection"
+						"folderPath": {
+							"value": "@dataset().DestinationFolder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().DestinationContainer",
+							"type": "Expression"
+						}
 					}
 				}
 			},
@@ -589,7 +595,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "IMdb DataSets"
+					"name": "IMdb DataSets/SQL Dataset"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
