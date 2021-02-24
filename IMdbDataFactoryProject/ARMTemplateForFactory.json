@@ -1068,7 +1068,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "BinaryDataSource_File",
+											"referenceName": "BinaryDataSource_Folder",
 											"type": "DatasetReference",
 											"parameters": {
 												"Container": {
@@ -1076,11 +1076,7 @@
 													"type": "Expression"
 												},
 												"Directory": {
-													"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceDirectory",
-													"type": "Expression"
-												},
-												"filename": {
-													"value": "@item().name",
+													"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceFolder",
 													"type": "Expression"
 												}
 											}
