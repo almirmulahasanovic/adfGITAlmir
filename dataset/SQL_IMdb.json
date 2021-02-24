@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "IMdb DataSets"
+			"name": "IMdb DataSets/SQL Dataset"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
