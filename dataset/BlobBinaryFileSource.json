@@ -17,13 +17,17 @@
 			}
 		},
 		"folder": {
-			"name": "IMdb DataSets"
+			"name": "IMdb DataSets/BloBToADLS"
 		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().File",
+					"type": "Expression"
+				},
 				"folderPath": {
 					"value": "@dataset().Folder",
 					"type": "Expression"

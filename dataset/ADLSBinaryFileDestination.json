@@ -14,13 +14,15 @@
 			}
 		},
 		"folder": {
-			"name": "IMdb DataSets"
+			"name": "IMdb DataSets/BloBToADLS"
 		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation"
+				"type": "AzureBlobFSLocation",
+				"folderPath": "OriginalFiles",
+				"fileSystem": "imdbdatacollection"
 			}
 		}
 	}
