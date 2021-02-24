@@ -5,23 +5,32 @@
 		"factoryName": {
 			"value": "IMdbDataFactoryProject"
 		},
+		"ADLSBinaryFileDestinationLinkedService_accountKey": {
+			"value": ""
+		},
+		"Adls_Sink_accountKey": {
+			"value": ""
+		},
+		"Adls__Sink_accountKey": {
+			"value": ""
+		},
 		"BlobIMdbLinkedService_connectionString": {
 			"value": ""
 		},
 		"MappingConfigurationFilesLS_accountKey": {
 			"value": ""
 		},
-		"Adls__Sink_accountKey": {
-			"value": ""
-		},
-		"Adls_Sink_accountKey": {
-			"value": ""
-		},
-		"ADLSBinaryFileDestinationLinkedService_accountKey": {
-			"value": ""
+		"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
+			"value": "https://adlsdatapractice.dfs.core.windows.net"
 		},
 		"ASQLConnection_properties_typeProperties_connectionString_secretName": {
 			"value": "IMdbSql"
+		},
+		"Adls_Sink_properties_typeProperties_url": {
+			"value": "https://adlsdatapractice.dfs.core.windows.net"
+		},
+		"Adls__Sink_properties_typeProperties_url": {
+			"value": "https://adlsdatapractice.dfs.core.windows.net"
 		},
 		"AzureKeyVaultConnection_properties_typeProperties_baseUrl": {
 			"value": "https://kv-datapractice.vault.azure.net/"
@@ -29,11 +38,17 @@
 		"AzureSqlDatabaseLinkedService_properties_typeProperties_connectionString_secretName": {
 			"value": "sqldatabase"
 		},
+		"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
+			"value": "blobstorage"
+		},
 		"IMdbHTTPLinkedService_properties_typeProperties_url": {
 			"value": "https://datasets.imdbws.com/"
 		},
 		"IMdbMappingConfigLinkedService_properties_typeProperties_connectionString_secretName": {
 			"value": "adls"
+		},
+		"IMdb_BloB_Files_properties_typeProperties_connectionString_secretName": {
+			"value": "blobstorage"
 		},
 		"KeyVaultConnection_properties_typeProperties_baseUrl": {
 			"value": "https://kv-datapractice.vault.azure.net/"
@@ -43,21 +58,6 @@
 		},
 		"bloblinkedservice_properties_typeProperties_connectionString_secretName": {
 			"value": "blobstorage"
-		},
-		"IMdb_BloB_Files_properties_typeProperties_connectionString_secretName": {
-			"value": "blobstorage"
-		},
-		"Adls__Sink_properties_typeProperties_url": {
-			"value": "https://adlsdatapractice.dfs.core.windows.net"
-		},
-		"Adls_Sink_properties_typeProperties_url": {
-			"value": "https://adlsdatapractice.dfs.core.windows.net"
-		},
-		"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
-			"value": "blobstorage"
-		},
-		"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
-			"value": "https://adlsdatapractice.dfs.core.windows.net"
 		}
 	}
 }

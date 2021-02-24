@@ -7,6 +7,18 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "IMdbDataFactoryProject"
 		},
+		"ADLSBinaryFileDestinationLinkedService_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLSBinaryFileDestinationLinkedService'"
+		},
+		"Adls_Sink_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Adls_Sink'"
+		},
+		"Adls__Sink_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Adls__Sink'"
+		},
 		"BlobIMdbLinkedService_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'BlobIMdbLinkedService'"
@@ -15,21 +27,21 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'MappingConfigurationFilesLS'"
 		},
-		"Adls__Sink_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'Adls__Sink'"
-		},
-		"Adls_Sink_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'Adls_Sink'"
-		},
-		"ADLSBinaryFileDestinationLinkedService_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ADLSBinaryFileDestinationLinkedService'"
+		"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
 		},
 		"ASQLConnection_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "IMdbSql"
+		},
+		"Adls_Sink_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
+		},
+		"Adls__Sink_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
 		},
 		"AzureKeyVaultConnection_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -39,6 +51,10 @@
 			"type": "string",
 			"defaultValue": "sqldatabase"
 		},
+		"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobstorage"
+		},
 		"IMdbHTTPLinkedService_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://datasets.imdbws.com/"
@@ -46,6 +62,10 @@
 		"IMdbMappingConfigLinkedService_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "adls"
+		},
+		"IMdb_BloB_Files_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobstorage"
 		},
 		"KeyVaultConnection_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -58,26 +78,6 @@
 		"bloblinkedservice_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "blobstorage"
-		},
-		"IMdb_BloB_Files_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "blobstorage"
-		},
-		"Adls__Sink_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
-		},
-		"Adls_Sink_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
-		},
-		"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "blobstorage"
-		},
-		"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
 		},
 		"containerUri": {
 			"type": "string",
@@ -106,20 +106,29 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"ADLSBinaryFileDestinationLinkedService_accountKey": {
+						"value": "[parameters('ADLSBinaryFileDestinationLinkedService_accountKey')]"
+					},
+					"Adls_Sink_accountKey": {
+						"value": "[parameters('Adls_Sink_accountKey')]"
+					},
+					"Adls__Sink_accountKey": {
+						"value": "[parameters('Adls__Sink_accountKey')]"
+					},
 					"BlobIMdbLinkedService_connectionString": {
 						"value": "[parameters('BlobIMdbLinkedService_connectionString')]"
 					},
 					"MappingConfigurationFilesLS_accountKey": {
 						"value": "[parameters('MappingConfigurationFilesLS_accountKey')]"
 					},
-					"Adls__Sink_accountKey": {
-						"value": "[parameters('Adls__Sink_accountKey')]"
+					"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
+						"value": "[parameters('ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url')]"
 					},
-					"Adls_Sink_accountKey": {
-						"value": "[parameters('Adls_Sink_accountKey')]"
+					"Adls_Sink_properties_typeProperties_url": {
+						"value": "[parameters('Adls_Sink_properties_typeProperties_url')]"
 					},
-					"ADLSBinaryFileDestinationLinkedService_accountKey": {
-						"value": "[parameters('ADLSBinaryFileDestinationLinkedService_accountKey')]"
+					"Adls__Sink_properties_typeProperties_url": {
+						"value": "[parameters('Adls__Sink_properties_typeProperties_url')]"
 					},
 					"AzureKeyVaultConnection_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVaultConnection_properties_typeProperties_baseUrl')]"
@@ -133,32 +142,23 @@
 					"MappingConfigurationFilesLS_properties_typeProperties_url": {
 						"value": "[parameters('MappingConfigurationFilesLS_properties_typeProperties_url')]"
 					},
-					"Adls__Sink_properties_typeProperties_url": {
-						"value": "[parameters('Adls__Sink_properties_typeProperties_url')]"
-					},
-					"Adls_Sink_properties_typeProperties_url": {
-						"value": "[parameters('Adls_Sink_properties_typeProperties_url')]"
-					},
-					"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
-						"value": "[parameters('ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url')]"
-					},
 					"ASQLConnection_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('ASQLConnection_properties_typeProperties_connectionString_secretName')]"
 					},
 					"AzureSqlDatabaseLinkedService_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('AzureSqlDatabaseLinkedService_properties_typeProperties_connectionString_secretName')]"
 					},
+					"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName')]"
+					},
 					"IMdbMappingConfigLinkedService_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('IMdbMappingConfigLinkedService_properties_typeProperties_connectionString_secretName')]"
-					},
-					"bloblinkedservice_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('bloblinkedservice_properties_typeProperties_connectionString_secretName')]"
 					},
 					"IMdb_BloB_Files_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('IMdb_BloB_Files_properties_typeProperties_connectionString_secretName')]"
 					},
-					"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName')]"
+					"bloblinkedservice_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('bloblinkedservice_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
