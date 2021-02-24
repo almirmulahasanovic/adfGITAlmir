@@ -37,7 +37,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -87,11 +87,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Blob_IMdb",
+						"referenceName": "ADLS_IMdb",
 						"type": "DatasetReference",
 						"parameters": {
 							"FileName": {
-								"value": "@{pipeline().parameters.DestinationTableName}.csv",
+								"value": "@{pipeline().parameters.FileName}.csv",
 								"type": "Expression"
 							}
 						}
