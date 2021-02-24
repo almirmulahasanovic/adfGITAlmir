@@ -10,7 +10,7 @@
 					"referenceName": "KeyVaultConnection",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "sqlsrv-keyvault-secret-access-key"
+				"secretName": "IMdbSql"
 			}
 		}
 	}
