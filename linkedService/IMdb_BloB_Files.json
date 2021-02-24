@@ -1,0 +1,17 @@
+{
+	"name": "IMdb_BloB_Files",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "KeyVaultConnection",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "blobstorage"
+			}
+		}
+	}
+}
