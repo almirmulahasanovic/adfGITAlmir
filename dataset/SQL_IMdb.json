@@ -1,0 +1,19 @@
+{
+	"name": "SQL_IMdb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "IMdb DataSets"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Mappings",
+			"table": "LoadFilesMappings"
+		}
+	}
+}
