@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'Adls_Sink'"
 		},
+		"ADLSBinaryFileDestinationLinkedService_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLSBinaryFileDestinationLinkedService'"
+		},
 		"ASQLConnection_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "IMdbSql"
@@ -64,6 +68,14 @@
 			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
 		},
 		"Adls_Sink_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
+		},
+		"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobstorage"
+		},
+		"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
 		}
@@ -400,70 +412,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/IMdb_Files_MappingConfiguration')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "MappingConfigurationFilesLS",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "IMdb DataSets"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "Mappings.csv",
-						"folderPath": "ConfigurationFiles",
-						"fileSystem": "imdbdatacollection"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/MappingConfigurationFilesLS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MappingConfigurationFile')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "MappingConfigurationFilesLS",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "IMdb DataSets"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "Mappings.csv",
-						"folderPath": "ConfigurationFiles",
-						"fileSystem": "imdbdatacollection"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/MappingConfigurationFilesLS')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SQL_IMdb')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -686,82 +634,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BinarySourceFileStore')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Connection to your source data store.",
-				"linkedServiceName": {
-					"referenceName": "IMdb_BloB_Files",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container": {
-						"type": "string"
-					},
-					"directory": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": {
-							"value": "@dataset().directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().container",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IMdb_BloB_Files')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BinarySinkFileStore')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Connection to your destination data store.",
-				"linkedServiceName": {
-					"referenceName": "Adls__Sink",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container": {
-						"type": "string"
-					},
-					"directory": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().directory",
-							"type": "Expression"
-						},
-						"fileSystem": {
-							"value": "@dataset().container",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Adls__Sink')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Adls_Sink')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -779,33 +651,60 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BinaryDataSource_Folder')]",
+			"name": "[concat(parameters('factoryName'), '/BlobBinaryFileSourceLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KeyVaultConnection",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KeyVaultConnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BlobBinaryFileSource')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "It describes the folder in the data source store.",
 				"linkedServiceName": {
-					"referenceName": "Adls__Sink",
+					"referenceName": "BlobBinaryFileSourceLinkedService",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
 					"Container": {
-						"type": "String"
+						"type": "string"
 					},
-					"Directory": {
-						"type": "String"
+					"Folder": {
+						"type": "string"
+					},
+					"File": {
+						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "IMdb DataSets"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation",
+						"type": "AzureBlobStorageLocation",
 						"folderPath": {
-							"value": "@dataset().Directory",
+							"value": "@dataset().Folder",
 							"type": "Expression"
 						},
-						"fileSystem": {
+						"container": {
 							"value": "@dataset().Container",
 							"type": "Expression"
 						}
@@ -813,228 +712,69 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Adls__Sink')]"
+				"[concat(variables('factoryId'), '/linkedServices/BlobBinaryFileSourceLinkedService')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BinaryDataSource_File')]",
+			"name": "[concat(parameters('factoryName'), '/ADLSBinaryFileDestinationLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLSBinaryFileDestinationLinkedService_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLSBinaryFileDestination')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "It describes the file in the data source store.",
 				"linkedServiceName": {
-					"referenceName": "IMdb_BloB_Files",
+					"referenceName": "ADLSBinaryFileDestinationLinkedService",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
 					"Container": {
-						"type": "String"
+						"type": "string"
 					},
-					"Directory": {
-						"type": "String"
+					"Folder": {
+						"type": "string"
 					},
-					"filename": {
+					"File": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "IMdb DataSets"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@{dataset().Directory}",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@{dataset().Container}",
-							"type": "Expression"
-						}
+						"type": "AzureBlobFSLocation"
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IMdb_BloB_Files')]"
+				"[concat(variables('factoryId'), '/linkedServices/ADLSBinaryFileDestinationLinkedService')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MoveFilesFromBlobToADLS')]",
+			"name": "[concat(parameters('factoryName'), '/MoveFromBlobToADLS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Move files from one folder to another folder",
 				"activities": [
 					{
-						"name": "GetFileList",
-						"description": "Get the list of file",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "Lookup Source and Destination paths",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "BinaryDataSource_Folder",
-								"type": "DatasetReference",
-								"parameters": {
-									"Container": {
-										"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceContainer",
-										"type": "Expression"
-									},
-									"Directory": {
-										"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceFolder",
-										"type": "Expression"
-									}
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEachFile",
-						"description": "Iterate each file, and move them one by one.",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "FilterFiles",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('FilterFiles').output.value",
-								"type": "Expression"
-							},
-							"batchCount": 20,
-							"activities": [
-								{
-									"name": "CopyAFile",
-									"description": "Copy a file from the source store to the destination store.",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "BinarySource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true
-											},
-											"formatSettings": {
-												"type": "BinaryReadSettings"
-											},
-											"recursive": false
-										},
-										"sink": {
-											"type": "BinarySink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											}
-										},
-										"enableStaging": false,
-										"dataIntegrationUnits": 0
-									},
-									"inputs": [
-										{
-											"referenceName": "BinaryDataSource_File",
-											"type": "DatasetReference",
-											"parameters": {
-												"Container": {
-													"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceContainer",
-													"type": "Expression"
-												},
-												"Directory": {
-													"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceFolder",
-													"type": "Expression"
-												},
-												"filename": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "Adls_Binary_Destination",
-											"type": "DatasetReference",
-											"parameters": {
-												"DestinationContainer": {
-													"value": "@activity('Lookup Source and Destination paths').output.firstRow.DestinationContainer",
-													"type": "Expression"
-												},
-												"DestinationFolder": {
-													"value": "@activity('Lookup Source and Destination paths').output.firstRow.DestinationFolder",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "FilterFiles",
-						"description": "Only files will be selected, the source-folders will not be selected.",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "GetFileList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetFileList').output.childItems",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(item().type, 'File')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Lookup Source and Destination paths",
+						"name": "Lookup for Source and Dest ContainersFolder",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -1056,7 +796,170 @@
 								"referenceName": "SQL_IMdb",
 								"type": "DatasetReference",
 								"parameters": {}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "Get Metadata",
+						"type": "GetMetadata",
+						"dependsOn": [
+							{
+								"activity": "Lookup for Source and Dest ContainersFolder",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "BlobBinaryMetadataFileSource",
+								"type": "DatasetReference",
+								"parameters": {
+									"Container": {
+										"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceContainer",
+										"type": "Expression"
+									},
+									"Folder": {
+										"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceFolder",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Filter Files Only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@endswith(item().name,'csv')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach Filtered File",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Filter Files Only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter Files Only').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy datafrom BloB into ADLS",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "BlobBinaryFileSource",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceContainer",
+													"type": "Expression"
+												},
+												"Folder": {
+													"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceFolder",
+													"type": "Expression"
+												},
+												"File": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ADLSBinaryFileDestination",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationContainer",
+													"type": "Expression"
+												},
+												"Folder": {
+													"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationFolder",
+													"type": "Expression"
+												},
+												"File": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
 						}
 					}
 				],
@@ -1066,93 +969,50 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_Folder')]",
 				"[concat(variables('factoryId'), '/datasets/SQL_IMdb')]",
-				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_File')]",
-				"[concat(variables('factoryId'), '/datasets/Adls_Binary_Destination')]"
+				"[concat(variables('factoryId'), '/datasets/BlobBinaryMetadataFileSource')]",
+				"[concat(variables('factoryId'), '/datasets/BlobBinaryFileSource')]",
+				"[concat(variables('factoryId'), '/datasets/ADLSBinaryFileDestination')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ADLS_Destination')]",
+			"name": "[concat(parameters('factoryName'), '/BlobBinaryMetadataFileSource')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Adls__Sink",
+					"referenceName": "BlobBinaryFileSourceLinkedService",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"DestinationContainer": {
-						"type": "string",
-						"defaultValue": "DestinationContainer"
+					"Container": {
+						"type": "string"
 					},
-					"DestinationFolder": {
-						"type": "string",
-						"defaultValue": "DestinationFolder"
+					"Folder": {
+						"type": "string"
 					}
 				},
 				"folder": {
 					"name": "IMdb DataSets"
 				},
 				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().DestinationFolder",
-							"type": "Expression"
-						},
-						"fileSystem": {
-							"value": "@dataset().DestinationContainer",
-							"type": "Expression"
-						}
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Adls__Sink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Adls_Binary_Destination')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Adls_Sink",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"DestinationContainer": {
-						"type": "string"
-					},
-					"DestinationFolder": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation",
+						"type": "AzureBlobStorageLocation",
 						"folderPath": {
-							"value": "@dataset().DestinationFolder",
+							"value": "@dataset().Folder",
 							"type": "Expression"
 						},
-						"fileSystem": {
-							"value": "@dataset().DestinationContainer",
+						"container": {
+							"value": "@dataset().Container",
 							"type": "Expression"
 						}
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Adls_Sink')]"
+				"[concat(variables('factoryId'), '/linkedServices/BlobBinaryFileSourceLinkedService')]"
 			]
 		}
 	]

@@ -17,6 +17,9 @@
 		"Adls_Sink_accountKey": {
 			"value": ""
 		},
+		"ADLSBinaryFileDestinationLinkedService_accountKey": {
+			"value": ""
+		},
 		"ASQLConnection_properties_typeProperties_connectionString_secretName": {
 			"value": "IMdbSql"
 		},
@@ -48,6 +51,12 @@
 			"value": "https://adlsdatapractice.dfs.core.windows.net"
 		},
 		"Adls_Sink_properties_typeProperties_url": {
+			"value": "https://adlsdatapractice.dfs.core.windows.net"
+		},
+		"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
+			"value": "blobstorage"
+		},
+		"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
 			"value": "https://adlsdatapractice.dfs.core.windows.net"
 		},
 		"containerUri": {

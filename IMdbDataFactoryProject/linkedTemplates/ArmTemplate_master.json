@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'Adls_Sink'"
 		},
+		"ADLSBinaryFileDestinationLinkedService_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLSBinaryFileDestinationLinkedService'"
+		},
 		"ASQLConnection_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "IMdbSql"
@@ -67,6 +71,14 @@
 			"type": "string",
 			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
 		},
+		"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobstorage"
+		},
+		"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdatapractice.dfs.core.windows.net"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -106,6 +118,9 @@
 					"Adls_Sink_accountKey": {
 						"value": "[parameters('Adls_Sink_accountKey')]"
 					},
+					"ADLSBinaryFileDestinationLinkedService_accountKey": {
+						"value": "[parameters('ADLSBinaryFileDestinationLinkedService_accountKey')]"
+					},
 					"AzureKeyVaultConnection_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVaultConnection_properties_typeProperties_baseUrl')]"
 					},
@@ -124,6 +139,9 @@
 					"Adls_Sink_properties_typeProperties_url": {
 						"value": "[parameters('Adls_Sink_properties_typeProperties_url')]"
 					},
+					"ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url": {
+						"value": "[parameters('ADLSBinaryFileDestinationLinkedService_properties_typeProperties_url')]"
+					},
 					"ASQLConnection_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('ASQLConnection_properties_typeProperties_connectionString_secretName')]"
 					},
@@ -138,6 +156,9 @@
 					},
 					"IMdb_BloB_Files_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('IMdb_BloB_Files_properties_typeProperties_connectionString_secretName')]"
+					},
+					"BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('BlobBinaryFileSourceLinkedService_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
