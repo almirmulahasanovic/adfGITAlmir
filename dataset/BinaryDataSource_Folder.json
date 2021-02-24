@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "It describes the folder in the data source store.",
 		"linkedServiceName": {
-			"referenceName": "IMdb_BloB_Files",
+			"referenceName": "Adls__Sink",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -18,13 +18,13 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"folderPath": {
-					"value": "@{dataset().Directory}",
+					"value": "@dataset().Directory",
 					"type": "Expression"
 				},
-				"container": {
-					"value": "@{dataset().Container}",
+				"fileSystem": {
+					"value": "@dataset().Container",
 					"type": "Expression"
 				}
 			}

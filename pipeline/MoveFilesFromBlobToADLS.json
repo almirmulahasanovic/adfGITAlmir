@@ -42,7 +42,7 @@
 						"childItems"
 					],
 					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
+						"type": "AzureBlobFSReadSettings",
 						"recursive": true
 					},
 					"formatSettings": {
@@ -98,7 +98,7 @@
 								"sink": {
 									"type": "BinarySink",
 									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
+										"type": "AzureBlobStorageWriteSettings"
 									}
 								},
 								"enableStaging": false,
@@ -126,62 +126,20 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "BinaryDataDestination",
+									"referenceName": "BinaryDataSource_Folder",
 									"type": "DatasetReference",
 									"parameters": {
-										"DestinationContainer": {
+										"Container": {
 											"value": "@activity('Lookup Source and Destination paths').output.firstRow.DestinationContainer",
 											"type": "Expression"
 										},
-										"DestinationFolder": {
+										"Directory": {
 											"value": "@activity('Lookup Source and Destination paths').output.firstRow.DestinationFolder",
 											"type": "Expression"
 										}
 									}
 								}
 							]
-						},
-						{
-							"name": "DeleteAFile",
-							"description": "Delete a file from the source store",
-							"type": "Delete",
-							"dependsOn": [
-								{
-									"activity": "CopyAFile",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataset": {
-									"referenceName": "BinaryDataSource_Folder",
-									"type": "DatasetReference",
-									"parameters": {
-										"Container": {
-											"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceContainer",
-											"type": "Expression"
-										},
-										"Directory": {
-											"value": "@activity('Lookup Source and Destination paths').output.firstRow.SourceFolder",
-											"type": "Expression"
-										}
-									}
-								},
-								"enableLogging": false,
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								}
-							}
 						}
 					]
 				}
@@ -236,20 +194,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"SourceStore_Location": {
-				"type": "String"
-			},
-			"SourceStore_Directory": {
-				"type": "String"
-			},
-			"DestinationStore_Location": {
-				"type": "String"
-			},
-			"DestinationStore_Directory": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "IMdb PipeLines"
 		},
