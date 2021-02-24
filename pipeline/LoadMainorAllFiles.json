@@ -88,10 +88,6 @@
 					"items": {
 						"value": "@activity('Lookup Load Configuration Parameters').output.value",
 						"type": "Expression"
-					},
-					"condition": {
-						"value": "@equals(item().IsActive,'1')",
-						"type": "Expression"
 					}
 				}
 			}
