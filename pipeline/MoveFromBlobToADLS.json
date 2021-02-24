@@ -49,7 +49,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "BlobBinaryMetadataFileSource",
+						"referenceName": "BlobBinaryFileSource",
 						"type": "DatasetReference",
 						"parameters": {
 							"Container": {
@@ -152,11 +152,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Container": {
-											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceContainer",
+											"value": "@item().SourceContainer",
 											"type": "Expression"
 										},
 										"Folder": {
-											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceFolder",
+											"value": "@item().SourceFolder",
 											"type": "Expression"
 										},
 										"File": {
@@ -172,11 +172,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Container": {
-											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationContainer",
+											"value": "@item().DestinationContainer",
 											"type": "Expression"
 										},
 										"Folder": {
-											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationFolder",
+											"value": "@item().DestinationFolder",
 											"type": "Expression"
 										},
 										"File": {
