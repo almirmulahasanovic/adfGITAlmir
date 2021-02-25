@@ -313,7 +313,7 @@
 									},
 									"Source": {
 										"value": {
-											"value": "@{item().SourceContainer}",
+											"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.DestinationContainer",
 											"type": "Expression"
 										},
 										"type": "String"
