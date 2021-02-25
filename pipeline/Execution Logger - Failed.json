@@ -1,0 +1,9 @@
+{
+	"name": "Execution Logger - Failed",
+	"properties": {
+		"folder": {
+			"name": "Loggers"
+		},
+		"annotations": []
+	}
+}
