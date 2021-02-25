@@ -365,7 +365,7 @@
 							"type": "Delete",
 							"dependsOn": [
 								{
-									"activity": "Copy data from Blob into ADLS",
+									"activity": "Log Execution - Completed",
 									"dependencyConditions": [
 										"Succeeded"
 									]
