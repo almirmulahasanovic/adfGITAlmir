@@ -43,6 +43,26 @@
 									}
 								}
 							}
+						},
+						{
+							"name": "Move From Blob To ADLS",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Exec Copy IMdb files From HTTP to Blob",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "MoveFromBlobToADLS",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
 						}
 					]
 				}
