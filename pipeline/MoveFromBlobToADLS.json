@@ -67,6 +67,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -188,7 +189,7 @@
 			}
 		],
 		"folder": {
-			"name": "IMdb PipeLines"
+			"name": "IMdb PipeLines/From HTTP to Blob_ADLS"
 		},
 		"annotations": []
 	}
