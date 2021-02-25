@@ -139,7 +139,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@select * from [Mappings].[ItemMappings] where PipelineId = activity('Lookup Load Configuration Parameters').output.firstRow.Id",
+							"value": "select * from [Mappings].[ItemMappings] where PipelineId = @{activity('Lookup Load Configuration Parameters').output.firstRow.Id}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
