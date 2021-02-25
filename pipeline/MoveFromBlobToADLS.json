@@ -250,7 +250,7 @@
 									},
 									"DataRead": {
 										"value": {
-											"value": "@{activity('Copy data from Blob into ADLS').output.rowsRead}",
+											"value": "@{activity('Copy data from Blob into ADLS').output.dataRead}",
 											"type": "Expression"
 										},
 										"type": "Int32"
