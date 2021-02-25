@@ -292,7 +292,7 @@
 									},
 									"rowsCopied": {
 										"value": {
-											"value": "@{activity('Copy data from Blob into ADLS').output.rowsCopied}",
+											"value": "@{activity('Copy data from Blob into ADLS').output.dataRead}",
 											"type": "Expression"
 										},
 										"type": "String"
