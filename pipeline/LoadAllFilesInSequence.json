@@ -148,7 +148,8 @@
 					"dataset": {
 						"referenceName": "SQL_IMdb",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
