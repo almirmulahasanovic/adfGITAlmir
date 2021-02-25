@@ -17,7 +17,7 @@
 			}
 		},
 		"folder": {
-			"name": "IMdb DataSets/BlobToADLS"
+			"name": "IMdb DataSets/Blob_To_ADLS"
 		},
 		"annotations": [],
 		"type": "Binary",
