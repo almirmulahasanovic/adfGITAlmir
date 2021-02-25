@@ -13,95 +13,13 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/BlobBinaryMetadataFileSource')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "BlobBinaryFileSourceLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Container": {
-						"type": "string"
-					},
-					"Folder": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "IMdb DataSets/Blob_To_ADLS"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": {
-							"value": "@dataset().Folder",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().Container",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_IMdb')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "IMdb DataSets/SQL_Dataset"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "Mappings",
-					"table": "LoadFilesMappings"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_IMdb_Destination')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "IMdb DataSets/ADLS_To_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "stage",
-					"table": "movies"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Move From ADLS to SQL')]",
+			"name": "[concat(parameters('factoryName'), '/Copy_IMdb_HTTP_To_BloB')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data from ADLS to SQL",
+						"name": "Copy IMdb from HTTP to Blob",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -111,137 +29,59 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [],
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "@{concat(pipeline().parameters.FileName, '.tsv.gz')}"
+							},
+							{
+								"name": "Destination",
+								"value": "imdbsourcedata/IMDb All/@{concat(pipeline().parameters.FileName, '.tsv')}"
+							}
+						],
 						"typeProperties": {
 							"source": {
 								"type": "DelimitedTextSource",
 								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
 								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
 								}
 							},
 							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "Truncate table stage.movies",
-								"disableMetricsCollection": false
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
 							},
 							"enableStaging": false,
+							"enableSkipIncompatibleRow": true,
+							"logSettings": {
+								"enableCopyActivityLog": true,
+								"copyActivityLogSettings": {
+									"logLevel": "Warning",
+									"enableReliableLogging": false
+								},
+								"logLocationSettings": {
+									"linkedServiceName": {
+										"referenceName": "BlobIMdbLinkedService",
+										"type": "LinkedServiceReference"
+									},
+									"path": {
+										"value": "imdbsourcedata/IMDb All/@{concat(pipeline().parameters.FileName, '.tsv')}",
+										"type": "Expression"
+									}
+								}
+							},
 							"translator": {
 								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "tconst",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "tconst",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "titleType",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "titleType",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "primaryTitle",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "primaryTitle",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "originalTitle",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "originalTitle",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "isAdult",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "isAdult",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "startYear",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "startYear",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "endYear",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "endYear",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "runtimeMinutes",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "runtimeMinutes",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "genres",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "genres",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									}
-								],
 								"typeConversion": true,
 								"typeConversionSettings": {
 									"allowDataTruncation": true,
@@ -251,46 +91,223 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "ADLSSourceFileLocation",
+								"referenceName": "HTTP_IMdb",
 								"type": "DatasetReference",
 								"parameters": {
-									"SourceContainer": "imdbdatacollection",
-									"SourceFolder": "OriginalFiles",
-									"SourceFile": "Basics.csv"
+									"FileName": {
+										"value": "@{pipeline().parameters.FileName}.tsv.gz",
+										"type": "Expression"
+									}
 								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "SQL_IMdb_Destination",
+								"referenceName": "Blob_IMdb",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": {
+										"value": "@{pipeline().parameters.DestinationTableName}.csv",
+										"type": "Expression"
+									}
+								}
 							}
 						]
+					},
+					{
+						"name": "Log Execution - Completed",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Copy IMdb from HTTP to Blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Logs].[sp_UpdateLogTable]",
+							"storedProcedureParameters": {
+								"CopyActivity_End_Time": {
+									"value": {
+										"value": "@{utcnow()}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"CopyActivity_queuingDuration_in_secs": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.executionDetails[0].detailedDurations.queuingDuration}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"CopyActivity_Start_Time": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.executionDetails[0].start}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"CopyActivity_transferDuration_in_secs": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.executionDetails[0].detailedDurations.transferDuration}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"copyDuration_in_secs": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.executionDetails[0].detailedDurations.transferDuration}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"DataFactory_Name": {
+									"value": {
+										"value": "@{pipeline().DataFactory}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"DataRead": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.dataRead}",
+										"type": "Expression"
+									},
+									"type": "Int32"
+								},
+								"Destination": {
+									"value": {
+										"value": "@activity('Copy IMdb from HTTP to Blob').output.firstRow.SourceContainer",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"effectiveIntegrationRuntime": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.effectiveIntegrationRuntime}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Execution_Status": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.executionDetails[0].status}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"No_ParallelCopies": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.usedParallelCopies}",
+										"type": "Expression"
+									},
+									"type": "Int32"
+								},
+								"Pipeline_Name": {
+									"value": {
+										"value": "@{pipeline().Pipeline}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"rowsCopied": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.dataRead}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"RunID": {
+									"value": {
+										"value": "@{pipeline().RunId}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Sink_Type": {
+									"value": {
+										"value": "@{activity('Copy IMdb from HTTP to Blob').output.executionDetails[0].sink.type}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Source": {
+									"value": {
+										"value": "HTTP",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Source_Type": {
+									"value": {
+										"value": "HTTP",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"TriggerId": {
+									"value": {
+										"value": "@{pipeline().TriggerId}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"TriggerName": {
+									"value": {
+										"value": "@{pipeline().TriggerName}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"TriggerTime": {
+									"value": {
+										"value": "@{pipeline().TriggerTime}",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"TriggerType": {
+									"value": {
+										"value": "@{pipeline().TriggerType}",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseLinkedService",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"parameters": {
-					"SourceContainer": {
-						"type": "string"
+					"FileName": {
+						"type": "String",
+						"defaultValue": "FileName"
 					},
-					"SourceFolder": {
-						"type": "string"
-					},
-					"SourceFile": {
-						"type": "string"
-					},
-					"Schema": {
-						"type": "string"
-					},
-					"SQLTableName": {
-						"type": "string"
+					"DestinationTableName": {
+						"type": "String",
+						"defaultValue": "DestinationTableName"
 					}
 				},
-				"annotations": []
+				"folder": {
+					"name": "IMdb PipeLines/From HTTP to Blob_ADLS"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-02-22T14:42:44Z"
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_IMdb_Destination')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/MoveFromBlobToADLS')]",
@@ -319,8 +336,7 @@
 							},
 							"dataset": {
 								"referenceName": "SQL_IMdb",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							},
 							"firstRowOnly": true
 						}
@@ -719,151 +735,7 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_IMdb')]",
-				"[concat(variables('factoryId'), '/datasets/BlobBinaryMetadataFileSource')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LoadAllFilesInSequence')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach File",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Filter Active Loads",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter Active Loads').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Exec Copy IMdb files From HTTP to Blob",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Copy_IMdb_HTTP_To_BloB",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"FileName": {
-												"value": "@item().SourceFileName",
-												"type": "Expression"
-											},
-											"DestinationTableName": {
-												"value": "@item().DestinationFileName",
-												"type": "Expression"
-											}
-										}
-									}
-								},
-								{
-									"name": "Move From Blob To ADLS",
-									"type": "ExecutePipeline",
-									"dependsOn": [
-										{
-											"activity": "Exec Copy IMdb files From HTTP to Blob",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "MoveFromBlobToADLS",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Lookup Load Configuration Parameters",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "select * from [Mappings].[LoadFilesMappings] where isActive = 1",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SQL_IMdb",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Filter Active Loads",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Lookup Load Configuration Parameters",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup Load Configuration Parameters').output.value",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(item().IsActive, 1)",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"variables": {
-					"Files": {
-						"type": "Array"
-					},
-					"ListOfFiles": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "IMdb PipeLines/From HTTP to Blob_ADLS"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_IMdb')]",
-				"[concat(variables('factoryId'), '/pipelines/MoveFromBlobToADLS')]"
-			]
+			"dependsOn": []
 		}
 	]
 }
