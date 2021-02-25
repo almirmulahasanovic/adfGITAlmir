@@ -1,5 +1,5 @@
 {
-	"name": "LoadMainorAllFiles",
+	"name": "LoadAllFilesInSequence",
 	"properties": {
 		"activities": [
 			{
@@ -106,7 +106,7 @@
 			}
 		},
 		"folder": {
-			"name": "IMdb PipeLines"
+			"name": "IMdb PipeLines/From HTTP to Blob_ADLS"
 		},
 		"annotations": []
 	}

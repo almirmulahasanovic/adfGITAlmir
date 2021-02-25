@@ -110,7 +110,7 @@
 			}
 		},
 		"folder": {
-			"name": "IMdb PipeLines"
+			"name": "IMdb PipeLines/From HTTP to Blob_ADLS"
 		},
 		"annotations": [],
 		"lastPublishTime": "2021-02-22T14:42:44Z"
