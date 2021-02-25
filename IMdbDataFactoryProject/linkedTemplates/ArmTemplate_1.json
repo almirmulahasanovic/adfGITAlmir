@@ -30,7 +30,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets/BloBToADLS"
+					"name": "IMdb DataSets/Blob_To_ADLS"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -60,7 +60,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "IMdb DataSets/SQL Dataset"
+					"name": "IMdb DataSets/SQL_Dataset"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -82,7 +82,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "IMdb DataSets/AdlsToSQL"
+					"name": "IMdb DataSets/ADLS_To_SQL"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -93,125 +93,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LoadMainorAllFiles')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach File",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Filter Active Loads",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter Active Loads').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Exec Copy IMdb files From HTTP to Blob",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Copy_IMdb_HTTP_To_BloB",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"FileName": {
-												"value": "@item().SourceFileName",
-												"type": "Expression"
-											},
-											"DestinationTableName": {
-												"value": "@item().DestinationFileName",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Lookup Load Configuration Parameters",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "select * from [Mappings].[LoadFilesMappings] where isActive = 1",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SQL_IMdb",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Filter Active Loads",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Lookup Load Configuration Parameters",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup Load Configuration Parameters').output.value",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(item().IsActive, 1)",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"variables": {
-					"Files": {
-						"type": "Array"
-					},
-					"ListOfFiles": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "IMdb PipeLines"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_IMdb')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Move From ADLS to SQL')]",
@@ -599,19 +480,336 @@
 											}
 										}
 									]
+								},
+								{
+									"name": "Log Execution - Completed",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [
+										{
+											"activity": "Copy data from Blob into ADLS",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[Logs].[sp_UpdateLogTable]",
+										"storedProcedureParameters": {
+											"CopyActivity_End_Time": {
+												"value": {
+													"value": "@{utcnow()}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"CopyActivity_queuingDuration_in_secs": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.executionDetails[0].detailedDurations.queuingDuration}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"CopyActivity_Start_Time": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.executionDetails[0].start}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"CopyActivity_transferDuration_in_secs": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.executionDetails[0].detailedDurations.transferDuration}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"copyDuration_in_secs": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.executionDetails[0].detailedDurations.transferDuration}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"DataFactory_Name": {
+												"value": {
+													"value": "@{pipeline().DataFactory}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"DataRead": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.dataRead}",
+													"type": "Expression"
+												},
+												"type": "Int32"
+											},
+											"Destination": {
+												"value": {
+													"value": "@activity('Lookup for Source and Dest ContainersFolder').output.firstRow.SourceContainer",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"effectiveIntegrationRuntime": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.effectiveIntegrationRuntime}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Execution_Status": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.executionDetails[0].status}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"No_ParallelCopies": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.usedParallelCopies}",
+													"type": "Expression"
+												},
+												"type": "Int32"
+											},
+											"Pipeline_Name": {
+												"value": {
+													"value": "@{pipeline().Pipeline}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"rowsCopied": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.dataRead}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"RunID": {
+												"value": {
+													"value": "@{pipeline().RunId}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Sink_Type": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.executionDetails[0].sink.type}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Source": {
+												"value": {
+													"value": "@{item().SourceContainer}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Source_Type": {
+												"value": {
+													"value": "@{activity('Copy data from Blob into ADLS').output.executionDetails[0].source.type}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"TriggerId": {
+												"value": {
+													"value": "@{pipeline().TriggerId}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"TriggerName": {
+												"value": {
+													"value": "@{pipeline().TriggerName}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"TriggerTime": {
+												"value": {
+													"value": "@{pipeline().TriggerTime}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"TriggerType": {
+												"value": {
+													"value": "@{pipeline().TriggerType}",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "AzureSqlDatabaseLinkedService",
+										"type": "LinkedServiceReference"
+									}
 								}
 							]
 						}
 					}
 				],
 				"folder": {
-					"name": "IMdb PipeLines"
+					"name": "IMdb PipeLines/From HTTP to Blob_ADLS"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQL_IMdb')]",
 				"[concat(variables('factoryId'), '/datasets/BlobBinaryMetadataFileSource')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LoadAllFilesInSequence')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach File",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Filter Active Loads",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter Active Loads').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Exec Copy IMdb files From HTTP to Blob",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy_IMdb_HTTP_To_BloB",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"FileName": {
+												"value": "@item().SourceFileName",
+												"type": "Expression"
+											},
+											"DestinationTableName": {
+												"value": "@item().DestinationFileName",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Move From Blob To ADLS",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Exec Copy IMdb files From HTTP to Blob",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "MoveFromBlobToADLS",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Load Configuration Parameters",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select * from [Mappings].[LoadFilesMappings] where isActive = 1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQL_IMdb",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Filter Active Loads",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Lookup Load Configuration Parameters",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Load Configuration Parameters').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().IsActive, 1)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"variables": {
+					"Files": {
+						"type": "Array"
+					},
+					"ListOfFiles": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "IMdb PipeLines/From HTTP to Blob_ADLS"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_IMdb')]",
+				"[concat(variables('factoryId'), '/pipelines/MoveFromBlobToADLS')]"
 			]
 		}
 	]

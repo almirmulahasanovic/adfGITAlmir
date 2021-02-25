@@ -224,7 +224,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets/BloBToADLS"
+					"name": "IMdb DataSets/Blob_To_ADLS"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -267,7 +267,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets/AdlsToSQL"
+					"name": "IMdb DataSets/ADLS_To_SQL"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -318,7 +318,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets/Initial Extraction and store from HTTP"
+					"name": "IMdb DataSets/Init_Extraction_And_Store_From_HTTP"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -359,7 +359,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets/Initial Extraction and store from HTTP"
+					"name": "IMdb DataSets/Init_Extraction_And_Store_From_HTTP"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -630,7 +630,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb PipeLines"
+					"name": "IMdb PipeLines/From HTTP to Blob_ADLS"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-02-22T14:42:44Z"
@@ -662,7 +662,7 @@
 					}
 				},
 				"folder": {
-					"name": "IMdb DataSets/BloBToADLS"
+					"name": "IMdb DataSets/Blob_To_ADLS"
 				},
 				"annotations": [],
 				"type": "Binary",
